@@ -1,0 +1,14 @@
+.env
+
+__pycache__/
+*.pyc
+
+backend/uploads/
+
+node_modules/
+dist/
+
+.vscode/
+.idea/
+
+mysql_data/
