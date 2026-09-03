@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.routes.health import router as health_router
-
+from app.routes.auth import router as auth_router
 
 app = FastAPI(
     title="ForenCrypt API",
@@ -18,6 +18,10 @@ app.include_router(
     prefix="/api"
 )
 
+app.include_router(
+    auth_router,
+    prefix="/api"
+)
 
 @app.get("/")
 def root():

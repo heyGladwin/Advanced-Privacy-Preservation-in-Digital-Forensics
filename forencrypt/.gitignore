@@ -12,3 +12,5 @@ dist/
 .idea/
 
 mysql_data/
+.
+.md
