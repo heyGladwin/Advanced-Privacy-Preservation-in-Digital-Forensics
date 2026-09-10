@@ -105,3 +105,60 @@ async def upload_evidence(
     db.refresh(evidence)
 
     return evidence
+
+
+@router.get("/{evidence_id}/verify")
+def verify_evidence(
+
+    evidence_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user: User = Depends(get_current_user)
+
+):
+
+    evidence = db.query(Evidence).filter(
+        Evidence.id == evidence_id
+    ).first()
+
+    if not evidence:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Evidence not found"
+        )
+
+    if not os.path.exists(
+        evidence.file_path
+    ):
+
+        raise HTTPException(
+            status_code=404,
+            detail="Evidence file missing"
+        )
+
+    current_hash = calculate_sha256(
+        evidence.file_path
+    )
+
+    is_valid = (
+        current_hash == evidence.sha256_hash
+    )
+
+    if not is_valid:
+
+        evidence.status = "COMPROMISED"
+
+        db.commit()
+
+    return {
+        "evidence_id": evidence.id,
+
+        "original_hash": evidence.sha256_hash,
+
+        "current_hash": current_hash,
+
+        "integrity_status":
+            "VALID" if is_valid else "COMPROMISED"
+    }
