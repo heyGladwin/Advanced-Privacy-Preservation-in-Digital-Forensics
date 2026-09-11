@@ -21,6 +21,7 @@ from app.routes.auth import get_current_user
 from app.schemas.evidence import EvidenceResponse
 
 from app.services.hashing import calculate_sha256
+from app.services.blockchain import create_block
 
 router = APIRouter(
     prefix="/evidence",
@@ -104,6 +105,14 @@ async def upload_evidence(
 
     db.refresh(evidence)
 
+    create_block(
+    db=db,
+    evidence_id=evidence.id,
+    action="EVIDENCE_UPLOADED",
+    performed_by=current_user.id,
+    evidence_hash=evidence.sha256_hash
+)
+
     return evidence
 
 
@@ -145,7 +154,6 @@ def verify_evidence(
     is_valid = (
         current_hash == evidence.sha256_hash
     )
-
     if not is_valid:
 
         evidence.status = "COMPROMISED"

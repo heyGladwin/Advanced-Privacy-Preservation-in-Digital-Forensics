@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.routes.health import router as health_router
 from app.routes.auth import router as auth_router
 from app.routes.evidence import router as evidence_router
+from app.routes.blockchain import router as blockchain_router
 app = FastAPI(
     title="ForenCrypt API",
     description=(
@@ -25,6 +26,10 @@ app.include_router(
 
 app.include_router(
     evidence_router,
+    prefix="/api"
+)
+app.include_router(
+    blockchain_router,
     prefix="/api"
 )
 @app.get("/")
