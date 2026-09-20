@@ -9,3 +9,7 @@ python-jose[cryptography]
 bcrypt
 email-validator
 python-multipart
+scikit-learn
+numpy
+joblib
+tenseal
