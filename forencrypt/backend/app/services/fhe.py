@@ -2,9 +2,6 @@ import tenseal as ts
 
 
 def create_context():
-    """
-    Create the CKKS encryption context.
-    """
 
     context = ts.context(
         ts.SCHEME_TYPE.CKKS,
@@ -13,15 +10,13 @@ def create_context():
     )
 
     context.global_scale = 2**40
+
     context.generate_galois_keys()
 
     return context
 
 
 def encrypt_features(values: list[float]):
-    """
-    Encrypt numerical forensic features.
-    """
 
     context = create_context()
 
@@ -33,14 +28,22 @@ def encrypt_features(values: list[float]):
     return context, encrypted_vector
 
 
-def perform_encrypted_computation(encrypted_vector):
-    """
-    Perform computation directly on encrypted data.
-    """
+def perform_encrypted_computation(
+    encrypted_vector
+):
 
-    weights = [2.0, 0.5, 0.01]
+    scales = [
+        1.0,
+        1.0,
+        0.01,
+        1.0,
+        1.0,
+        1.0
+    ]
 
-    encrypted_result = encrypted_vector.dot(weights)
+    encrypted_result = (
+        encrypted_vector * scales
+    )
 
     return encrypted_result
 
@@ -48,8 +51,5 @@ def perform_encrypted_computation(encrypted_vector):
 def decrypt_result(
     encrypted_result
 ):
-    """
-    Decrypt the computed result.
-    """
 
-    return encrypted_result.decrypt()[0]
+    return encrypted_result.decrypt()

@@ -2,7 +2,6 @@ import os
 import joblib
 import numpy as np
 
-
 MODEL_PATH = "app/ml/anomaly_model.pkl"
 
 model = None
@@ -23,8 +22,8 @@ def load_model():
 
 
 def predict_anomaly(
-    failed_logins: int,
-    file_access_count: int,
+    failed_logins: float,
+    file_access_count: float,
     data_transfer_mb: float,
     unique_ips: int,
     login_frequency: int,
@@ -48,8 +47,10 @@ def predict_anomaly(
 
     if prediction == -1:
         risk_level = "HIGH"
+
     elif score < 0.1:
         risk_level = "MEDIUM"
+
     else:
         risk_level = "LOW"
 

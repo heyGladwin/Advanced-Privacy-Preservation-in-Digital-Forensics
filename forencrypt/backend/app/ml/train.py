@@ -1,13 +1,15 @@
 import numpy as np
 import joblib
-
 from sklearn.ensemble import IsolationForest
 
 
-# Training data
-# [failed_logins, file_access_count,
-#  data_transfer_mb, unique_ips,
-#  login_frequency, execution_count]
+# Features:
+# [failed_logins,
+#  file_access_count,
+#  data_transfer_mb,
+#  unique_ips,
+#  login_frequency,
+#  execution_count]
 
 X = np.array([
     [1, 5, 50, 1, 3, 2],
@@ -21,10 +23,15 @@ X = np.array([
     [1, 4, 40, 1, 2, 2],
     [2, 6, 65, 1, 3, 3],
 
-    # Some unusual activity
+    # anomalous examples
     [25, 150, 5000, 15, 80, 100],
     [30, 200, 8000, 20, 100, 150]
 ])
+
+
+# Apply the SAME preprocessing
+# used by the FHE layer.
+X[:, 2] = X[:, 2] * 0.01
 
 
 model = IsolationForest(
@@ -37,9 +44,8 @@ model.fit(X)
 
 joblib.dump(
     model,
-    "anomaly_model.pkl"
+    "/app/app/ml/anomaly_model.pkl"
 )
 
-print("Anomaly detection model trained successfully.")  
 print("Model trained successfully.")
-print("Model saved successfully.")
+print("Model saved to /app/app/ml/anomaly_model.pkl")
